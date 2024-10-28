@@ -1,4 +1,6 @@
-import * as https from 'https';
+import fetch from 'node-fetch';
+import urljoin from 'url-join';
+
 import { gql } from '@apollo/client/index.js';
 import { api } from './api/api.js';
 
@@ -21,39 +23,20 @@ class TinyDummy{
         return this._options.api_endpoint ?? uri;
     }
 
-    request(pathstub, jsonData) {
-        return new Promise((resolve, reject) => {
+    async request(pathstub, jsonData) {
+      const uri = urljoin("https://", this.endpoint(), pathstub);
 
-            const options = {
-                hostname:   this.endpoint(),
-                path:       pathstub,
-                method:     'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${this._tokenCompany}`,
-                },
-              };
-              //
-              const request = https.request(options, (res) => {
-                let data = '';
-                console.log(`statusCode: ${res}`);
-              
-                res.on('data', (d) => {
-                  data += d;
-                });
-                res.on('end', () => {
-                    resolve(JSON.parse(data));
-                });
-              });
-              
-              request.on('error', (error) => {
-                reject(error);
-              });
-              
-              request.write(JSON.stringify(jsonData));
-              request.end();
-              
-        });
+      const response = await fetch(uri, {
+        method: 'post',
+        body: JSON.stringify(jsonData),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this._tokenCompany}`,
+        },
+      });
+
+      const data = await response.json();
+      return data;
     }
 
       
@@ -100,7 +83,6 @@ query (
 }
 `;
 
-console.log(api)
             const response = await this.request('/company', {
                 query: api.get_companies.loc.source.body
             });
