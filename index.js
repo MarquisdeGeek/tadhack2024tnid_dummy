@@ -17,5 +17,23 @@ dummy.tokenCompany = token;
 // Use that token to retrieve some data
 const companies = await dummy.companyGetAll();
 
-console.log(companies)
+console.log(`I found ${companies.length} companies`);
+
+console.log(`Connections:`);
+const connections = await dummy.companyListConnections();
+connections.forEach((c) => {
+    console.log(` * ${c.connectedUser.id}`);
+});
+
+
+console.log(`Pending:`);
+const connectionsPending = await dummy.companyListConnectionsPending();
+connectionsPending.forEach((c) => {
+    console.log(` * Company ${c.company.id} => user ${c.invitedUser.id}`);
+});
+
+
+console.log(`Inviting:`);
+const invite = await dummy.companyInviteUser(connections[0].connectedUser.id);
+console.log(JSON.stringify(invite))
 

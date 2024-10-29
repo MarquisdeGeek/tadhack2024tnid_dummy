@@ -65,7 +65,7 @@ class TinyDummy{
       // remove them.
 
       return response.access_token;
-  }
+    }
 
     async companyGetAll() {
         const response = await this.request('/company', {
@@ -73,6 +73,31 @@ class TinyDummy{
         });
 
         return response.data.companies;
+    }
+
+    async companyListConnections() {
+      const response = await this.request('/company', {
+          query: api.companies_list_connections.loc.source.body
+      });
+
+      return response.data.b2cConnections;
+    }
+
+    async companyListConnectionsPending() {
+      const response = await this.request('/company', {
+          query: api.companies_list_connections_pending.loc.source.body
+      });
+
+      return response.data.pendingB2cConnectionRequests;
+    }
+
+    async companyInviteUser(id) {
+      const response = await this.request('/company', {
+        query: api.companies_invite_user.loc.source.body,
+        user: id
+      });
+
+      return response.data.b2cConnections;
     }
 
 
