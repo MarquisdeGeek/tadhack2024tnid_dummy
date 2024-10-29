@@ -11,7 +11,7 @@ const dummy = new TinyDummy({
 })
 
 // Get a token, from the basic client secrets
-const token = await dummy.companyGetToken();
+const token = await dummy.companyGetToken(process.env.TNID_CLIENT_ID, process.env.TNID_CLIENT_SECRET);
 dummy.tokenCompany = token;
 
 // Use that token to retrieve some data
